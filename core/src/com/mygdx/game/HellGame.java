@@ -12,6 +12,7 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
@@ -33,7 +34,8 @@ public class HellGame extends ApplicationAdapter {
 	@Override
 	public void create() {
 		hellGameInstance = this;
-		new MyInputProcessor();
+		Gdx.input.setInputProcessor(new GestureDetector(new MyInputProcessor()));
+
 		// load the images for the droplet and the bucket, 64x64 pixels each
 		dropImage = new Texture(Gdx.files.internal("droplet.png"));
 		bucketImage = new Texture(Gdx.files.internal("bucket.png"));
@@ -100,17 +102,10 @@ public class HellGame extends ApplicationAdapter {
 		batch.end();
 
 		// process user input
-		if(Gdx.input.isTouched()) {
-			Vector3 touchPos = new Vector3();
-			touchPos.set(Gdx.input.getX(), Gdx.input.getY(), 0);
-			camera.unproject(touchPos);
-			bucket.x = touchPos.x - 64 / 2;
-			bucket.y = touchPos.y - 64 / 2;
-		}
 
 
-		if(Gdx.input.isKeyPressed(Keys.LEFT)) bucket.x -= 200 * Gdx.graphics.getDeltaTime();
-		if(Gdx.input.isKeyPressed(Keys.RIGHT)) bucket.x += 200 * Gdx.graphics.getDeltaTime();
+
+
 
 		// make sure the bucket stays within the screen bounds
 		if(bucket.x < 0) bucket.x = 0;

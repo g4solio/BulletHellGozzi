@@ -1,5 +1,6 @@
 package com.mygdx.game;
 
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.Cursor;
@@ -59,11 +60,15 @@ public class MyInputProcessor implements InputProcessor {
 }
  */
 public class MyInputProcessor implements GestureDetector.GestureListener {
+    float DeltaX;
+    float DeltaY;
 
     @Override
     public boolean touchDown(float x, float y, int pointer, int button) {
 
-        return false;
+        DeltaX = x - HellGame.hellGameInstance.bucket.x;
+        DeltaY = y + HellGame.hellGameInstance.bucket.y;
+        return true;
     }
 
     @Override
@@ -87,8 +92,11 @@ public class MyInputProcessor implements GestureDetector.GestureListener {
     @Override
     public boolean pan(float x, float y, float deltaX, float deltaY) {
 
-        HellGame.hellGameInstance.bucket.x = (HellGame.hellGameInstance.bucket.x + deltaX) - 64 / 2;
-        HellGame.hellGameInstance.bucket.y = (HellGame.hellGameInstance.bucket.y + deltaY) - 64 / 2;
+        HellGame.hellGameInstance.bucket.x = (x + DeltaX) - 64 / 2;
+        HellGame.hellGameInstance.bucket.y = (y + DeltaY)  - 64 / 2;
+        //HellGame.hellGameInstance.bucket.x = (HellGame.hellGameInstance.bucket.x - deltaX/10) - 64 / 2;
+        //HellGame.hellGameInstance.bucket.y = (HellGame.hellGameInstance.bucket.y - deltaY/10) - 64 / 2;
+        HellGame.hellGameInstance.camera.unproject(new Vector3(x,y,0));
         Gdx.app.log("meters",""+deltaY);
 
         return true;

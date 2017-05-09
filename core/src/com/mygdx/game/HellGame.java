@@ -11,6 +11,7 @@ import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.math.MathUtils;
@@ -20,8 +21,8 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.TimeUtils;
 
 public class HellGame extends ApplicationAdapter {
-	public Texture dropImage;
-	public Texture bucketImage;
+	public Sprite dropImage;
+	public Sprite bucketImage;
 	public Sound dropSound;
 	public Music rainMusic;
 	public SpriteBatch batch;
@@ -36,8 +37,9 @@ public class HellGame extends ApplicationAdapter {
 		hellGameInstance = this;
 
 		// load the images for the droplet and the bucket, 64x64 pixels each
-		dropImage = new Texture(Gdx.files.internal("droplet.png"));
-		bucketImage = new Texture(Gdx.files.internal("bucket.png"));
+
+		dropImage = new Sprite(new Texture(Gdx.files.internal("droplet.png")));
+		bucketImage = new Sprite(new Texture(Gdx.files.internal("bucket.png")));
 
 		// load the drop sound effect and the rain background "music"
 		dropSound = Gdx.audio.newSound(Gdx.files.internal("drop.wav"));
@@ -69,12 +71,7 @@ public class HellGame extends ApplicationAdapter {
 	}
 
 	private void spawnRaindrop() {
-		Rectangle raindrop = new Rectangle();
-		raindrop.x = MathUtils.random(0, 800-64);
-		raindrop.y = 480;
-		raindrop.width = 64;
-		raindrop.height = 64;
-		raindrops.add(raindrop);
+		new Projectile(new Rectangle(MathUtils.random(0, 800-64),480,64,64),dropImage,MathUtils.random(90,270),200);
 		lastDropTime = TimeUtils.nanoTime();
 	}
 
@@ -98,8 +95,8 @@ public class HellGame extends ApplicationAdapter {
 		// all drops
 		batch.begin();
 		batch.draw(bucketImage, bucket.x, bucket.y);
-		for(Rectangle raindrop: raindrops) {
-			batch.draw(dropImage, raindrop.x, raindrop.y);
+		for(Projectile projectile: projectileArray) {
+			batch.draw(dropImage, projectile.projectile.x, projectile.projectile.y);
 		}
 		batch.end();
 
@@ -115,17 +112,19 @@ public class HellGame extends ApplicationAdapter {
 		if(bucket.y > 480 - 64) bucket.y = 480 - 64;
 		if(bucket.y < 0) bucket.y = 0;
 		// check if we need to create a new raindrop
-		if(TimeUtils.nanoTime() - lastDropTime > 1000000000) spawnRaindrop();
+		if(TimeUtils.nanoTime() - lastDropTime > 10000) spawnRaindrop();
 
 		// move the raindrops, remove any that are beneath the bottom edge of
 		// the screen or that hit the bucket. In the later case we play back
 		// a sound effect as well.
-		Iterator<Rectangle> iter = raindrops.iterator();
+		Iterator<Projectile> iter = projectileArray.iterator();
 		while(iter.hasNext()) {
-			Rectangle raindrop = iter.next();
-			raindrop.y -= 200 * Gdx.graphics.getDeltaTime();
-			if(raindrop.y + 64 < 0) iter.remove();
-			if(raindrop.overlaps(bucket)) {
+			Projectile projectile = iter.next();
+
+			projectile.projectile.y -= projectile.velocity * Gdx.graphics.getDeltaTime() * MathUtils.sin(projectile.degree);
+			projectile.projectile.x += projectile.velocity * Gdx.graphics.getDeltaTime() * MathUtils.cos(projectile.degree);
+			if(projectile.projectile.y + 64 < 0) iter.remove();
+			if(projectile.projectile.overlaps(bucket)) {
 				dropSound.play();
 				iter.remove();
 			}
@@ -135,8 +134,7 @@ public class HellGame extends ApplicationAdapter {
 	@Override
 	public void dispose() {
 		// dispose of all the native resources
-		dropImage.dispose();
-		bucketImage.dispose();
+
 		dropSound.dispose();
 		rainMusic.dispose();
 		batch.dispose();

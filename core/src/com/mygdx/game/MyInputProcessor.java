@@ -60,19 +60,19 @@ public class MyInputProcessor implements InputProcessor {
 }
  */
 public class MyInputProcessor implements GestureDetector.GestureListener {
-    float DeltaX;
-    float DeltaY;
-
+    float DeltaX = HellGame.hellGameInstance.bucket.x;
+    float DeltaY = HellGame.hellGameInstance.bucket.x;
+    boolean hasBeenDragged = false;
+    Vector2 posFirstTouch = new Vector2();
     @Override
     public boolean touchDown(float x, float y, int pointer, int button) {
 
-        DeltaX = x - HellGame.hellGameInstance.bucket.x;
-        DeltaY = y + HellGame.hellGameInstance.bucket.y;
-        return true;
+        return false;
     }
 
     @Override
     public boolean tap(float x, float y, int count, int button) {
+
 
         return false;
     }
@@ -92,20 +92,25 @@ public class MyInputProcessor implements GestureDetector.GestureListener {
     @Override
     public boolean pan(float x, float y, float deltaX, float deltaY) {
 
-        HellGame.hellGameInstance.bucket.x = (x + DeltaX) - 64 / 2;
-        HellGame.hellGameInstance.bucket.y = (y + DeltaY)  - 64 / 2;
-        //HellGame.hellGameInstance.bucket.x = (HellGame.hellGameInstance.bucket.x - deltaX/10) - 64 / 2;
-        //HellGame.hellGameInstance.bucket.y = (HellGame.hellGameInstance.bucket.y - deltaY/10) - 64 / 2;
-        HellGame.hellGameInstance.camera.unproject(new Vector3(x,y,0));
-        Gdx.app.log("meters",""+deltaY);
+        if(hasBeenDragged)
+        {
+            HellGame.hellGameInstance.bucket.x = 0;
+            HellGame.hellGameInstance.bucket.y = 0;
+            HellGame.hellGameInstance.camera.unproject(new Vector3(x,y,0));
+        }
+        else
+        {
+            posFirstTouch.set(x, y);
+            hasBeenDragged = true;
+        }
 
         return true;
     }
 
     @Override
     public boolean panStop(float x, float y, int pointer, int button) {
-
-        return false;
+        hasBeenDragged=false;
+        return true;
     }
 
     @Override

@@ -34,7 +34,6 @@ public class HellGame extends ApplicationAdapter {
 	@Override
 	public void create() {
 		hellGameInstance = this;
-		Gdx.input.setInputProcessor(new GestureDetector(new MyInputProcessor()));
 
 		// load the images for the droplet and the bucket, 64x64 pixels each
 		dropImage = new Texture(Gdx.files.internal("droplet.png"));
@@ -64,6 +63,8 @@ public class HellGame extends ApplicationAdapter {
 		// create the raindrops array and spawn the first raindrop
 		raindrops = new Array<Rectangle>();
 		spawnRaindrop();
+		Gdx.input.setInputProcessor(new GestureDetector(new MyInputProcessor()));
+
 	}
 
 	private void spawnRaindrop() {

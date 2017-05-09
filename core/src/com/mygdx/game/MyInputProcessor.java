@@ -94,13 +94,23 @@ public class MyInputProcessor implements GestureDetector.GestureListener {
 
         if(hasBeenDragged)
         {
-            HellGame.hellGameInstance.bucket.x = 0;
-            HellGame.hellGameInstance.bucket.y = 0;
-            HellGame.hellGameInstance.camera.unproject(new Vector3(x,y,0));
+            DeltaX = ((x - posFirstTouch.x)/1800)*800;
+            if(DeltaX!=0)
+            {
+                HellGame.hellGameInstance.bucket.x = HellGame.hellGameInstance.bucket.x + (DeltaX);
+            }
+            DeltaY = ((y - posFirstTouch.y)/1000)*480;
+            if(DeltaY!=0)
+            {
+                HellGame.hellGameInstance.bucket.y = HellGame.hellGameInstance.bucket.y - (DeltaY);
+            }
+            Gdx.app.log("Spostamento","x -> " + DeltaX + " y -> "+ DeltaY + " pos -> " + HellGame.hellGameInstance.bucket);
+            posFirstTouch.set(x, y);
         }
         else
         {
             posFirstTouch.set(x, y);
+            Gdx.app.log("Stringa","x -> " + posFirstTouch.x + " y -> "+ posFirstTouch.y);
             hasBeenDragged = true;
         }
 

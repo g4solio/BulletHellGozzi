@@ -30,7 +30,7 @@ public class HellGame extends ApplicationAdapter {
 	public Array<Rectangle> raindrops;
 	public long lastDropTime;
 	public static HellGame hellGameInstance;
-
+	public Array<Projectile> projectileArray;
 	@Override
 	public void create() {
 		hellGameInstance = this;
@@ -62,6 +62,7 @@ public class HellGame extends ApplicationAdapter {
 
 		// create the raindrops array and spawn the first raindrop
 		raindrops = new Array<Rectangle>();
+		projectileArray = new Array<Projectile>();
 		spawnRaindrop();
 		Gdx.input.setInputProcessor(new GestureDetector(new MyInputProcessor()));
 

@@ -69,7 +69,7 @@ public class HellGame extends ApplicationAdapter {
 	}
 
 	private void spawnRaindrop() {
-		new Projectile(new Rectangle(MathUtils.random(0, 800-64),480,64,64),dropImage,MathUtils.random(90,270),200);
+		new Projectile(new Rectangle(MathUtils.random(0, 800-64),240,64,64),dropImage,90,200);
 		lastDropTime = TimeUtils.nanoTime();
 	}
 
@@ -92,10 +92,10 @@ public class HellGame extends ApplicationAdapter {
 		// begin a new batch and draw the bucket and
 		// all drops
 		batch.begin();
-		batch.draw(shipImage, bucket.x, bucket.y);
-		/*for(Projectile projectile: projectileArray) {
+		batch.draw(shipImage, bucket.x, bucket.y,64,64);
+		for(Projectile projectile: projectileArray) {
 			batch.draw(dropImage, projectile.projectile.x, projectile.projectile.y);
-		}*/
+		}
 		batch.end();
 
 		// process user input
@@ -110,7 +110,7 @@ public class HellGame extends ApplicationAdapter {
 		if(bucket.y > 480 - 64) bucket.y = 480 - 64;
 		if(bucket.y < 0) bucket.y = 0;
 		// check if we need to create a new raindrop
-		if(TimeUtils.nanoTime() - lastDropTime > 10000) spawnRaindrop();
+		if(TimeUtils.nanoTime() - lastDropTime > 1000000000) spawnRaindrop();
 
 		// move the raindrops, remove any that are beneath the bottom edge of
 		// the screen or that hit the bucket. In the later case we play back
@@ -119,8 +119,9 @@ public class HellGame extends ApplicationAdapter {
 		while(iter.hasNext()) {
 			Projectile projectile = iter.next();
 
-			projectile.projectile.y -= projectile.velocity * Gdx.graphics.getDeltaTime() * MathUtils.sin(projectile.degree);
-			projectile.projectile.x += projectile.velocity * Gdx.graphics.getDeltaTime() * MathUtils.cos(projectile.degree);
+			projectile.projectile.y -= projectile.velocity * Gdx.graphics.getDeltaTime() * Math.sin(Math.toDegrees(projectile.degree));
+			projectile.projectile.x += projectile.velocity * Gdx.graphics.getDeltaTime() * Math.cos(Math.toDegrees(projectile.degree));
+			Gdx.app.log("Goccia",Math.cos(Math.toDegrees(projectile.degree)) + "");
 			if(projectile.projectile.y + 64 < 0) iter.remove();
 			if(projectile.projectile.overlaps(bucket)) {
 				dropSound.play();

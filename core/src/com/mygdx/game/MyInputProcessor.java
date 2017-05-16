@@ -87,12 +87,12 @@ public class MyInputProcessor implements GestureDetector.GestureListener {
 
         if(hasBeenDragged)
         {
-            DeltaX = ((x - posFirstTouch.x)/Gdx.graphics.getWidth())*800;
+            DeltaX = ((x - posFirstTouch.x)/Gdx.graphics.getWidth())*480;
             if(DeltaX!=0)
             {
                 HellGame.hellGameInstance.spaceShip.x = HellGame.hellGameInstance.spaceShip.x + (DeltaX);
             }
-            DeltaY = ((y - posFirstTouch.y)/Gdx.graphics.getHeight())*480;
+            DeltaY = ((y - posFirstTouch.y)/Gdx.graphics.getHeight())*800;
             if(DeltaY!=0)
             {
                 HellGame.hellGameInstance.spaceShip.y = HellGame.hellGameInstance.spaceShip.y - (DeltaY);

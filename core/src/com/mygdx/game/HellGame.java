@@ -22,6 +22,7 @@ public class HellGame extends ApplicationAdapter {
 	public Sprite projectileTexture;
 	public Sprite shipImage;
 	public SpriteBatch batch;
+	public Sprite backGroundSprite;
 	public OrthographicCamera camera;
 	public Rectangle spaceShip;
 	public long lastDropTime;
@@ -36,7 +37,7 @@ public class HellGame extends ApplicationAdapter {
 
 		projectileTexture = new Sprite(new Texture(Gdx.files.internal("Asteroid.png")));
 		shipImage = new Sprite(new Texture(Gdx.files.internal("ship_0.png")));
-
+		backGroundSprite = new Sprite(new Texture(Gdx.files.internal("backGround.png")));
 
 		// create the camera and the SpriteBatch
 		camera = new OrthographicCamera();
@@ -51,7 +52,7 @@ public class HellGame extends ApplicationAdapter {
 		spaceShip.height = 64;
 
 
-		// create the raindrops array and spawn the first raindrop
+		// create the projectile array and spawn the first raindrop
 		projectileArray = new Array<Projectile>();
 		spawnRaindrop();
 		Gdx.input.setInputProcessor(new GestureDetector(new MyInputProcessor()));
@@ -69,7 +70,7 @@ public class HellGame extends ApplicationAdapter {
 		// arguments to glClearColor are the red, green
 		// blue and alpha component in the range [0,1]
 		// of the color to be used to clear the screen.
-		Gdx.gl.glClearColor(0, 0, 0.2f, 1);
+		Gdx.gl.glClearColor(0, 0, 0.7f, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
 		// tell the camera to update its matrices.
@@ -80,6 +81,7 @@ public class HellGame extends ApplicationAdapter {
 
 
 		batch.begin();
+		batch.draw(backGroundSprite,0,0,480,800);
 		batch.draw(shipImage, spaceShip.x, spaceShip.y,64,64);
 		for(Projectile projectile: projectileArray) {
 			batch.draw(projectileTexture, projectile.projectile.x, projectile.projectile.y);

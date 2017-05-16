@@ -1,15 +1,8 @@
 package com.mygdx.game;
 
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.InputProcessor;
-import com.badlogic.gdx.graphics.Cursor;
 import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.math.Vector3;
-
-
-import javax.xml.ws.handler.LogicalHandler;
 
 /**
  * Created by j.zanti on 29/04/2017.
@@ -32,7 +25,7 @@ public class MyInputProcessor implements InputProcessor {
     public boolean touchDown (int x, int y, int pointer, int button) {
         Gdx.app.debug("TouchDown","TouchDown");
         HellGame.hellGameInstance.camera.unproject(new Vector3(x, y, 0));
-        firstTouch.set(x - HellGame.hellGameInstance.bucket.x, y - HellGame.hellGameInstance.bucket.y);
+        firstTouch.set(x - HellGame.hellGameInstance.spaceShip.x, y - HellGame.hellGameInstance.spaceShip.y);
 
         return true;
 
@@ -45,8 +38,8 @@ public class MyInputProcessor implements InputProcessor {
     public boolean touchDragged (int x, int y, int pointer) {
         Cursor.System("TouchDragged","TouchDragged");
 
-        HellGame.hellGameInstance.bucket.x = (HellGame.hellGameInstance.bucket.x + firstTouch.x + x) - 64 / 2;
-        HellGame.hellGameInstance.bucket.y = (HellGame.hellGameInstance.bucket.y + firstTouch.y + y) - 64 / 2;
+        HellGame.hellGameInstance.spaceShip.x = (HellGame.hellGameInstance.spaceShip.x + firstTouch.x + x) - 64 / 2;
+        HellGame.hellGameInstance.spaceShip.y = (HellGame.hellGameInstance.spaceShip.y + firstTouch.y + y) - 64 / 2;
         return true;
     }
 
@@ -60,8 +53,8 @@ public class MyInputProcessor implements InputProcessor {
 }
  */
 public class MyInputProcessor implements GestureDetector.GestureListener {
-    float DeltaX = HellGame.hellGameInstance.bucket.x;
-    float DeltaY = HellGame.hellGameInstance.bucket.x;
+    float DeltaX = HellGame.hellGameInstance.spaceShip.x;
+    float DeltaY = HellGame.hellGameInstance.spaceShip.x;
     boolean hasBeenDragged = false;
     Vector2 posFirstTouch = new Vector2();
     @Override
@@ -97,14 +90,14 @@ public class MyInputProcessor implements GestureDetector.GestureListener {
             DeltaX = ((x - posFirstTouch.x)/Gdx.graphics.getWidth())*800;
             if(DeltaX!=0)
             {
-                HellGame.hellGameInstance.bucket.x = HellGame.hellGameInstance.bucket.x + (DeltaX);
+                HellGame.hellGameInstance.spaceShip.x = HellGame.hellGameInstance.spaceShip.x + (DeltaX);
             }
             DeltaY = ((y - posFirstTouch.y)/Gdx.graphics.getHeight())*480;
             if(DeltaY!=0)
             {
-                HellGame.hellGameInstance.bucket.y = HellGame.hellGameInstance.bucket.y - (DeltaY);
+                HellGame.hellGameInstance.spaceShip.y = HellGame.hellGameInstance.spaceShip.y - (DeltaY);
             }
-            Gdx.app.log("Spostamento","x -> " + DeltaX + " y -> "+ DeltaY + " pos -> " + HellGame.hellGameInstance.bucket);
+            Gdx.app.log("Spostamento","x -> " + DeltaX + " y -> "+ DeltaY + " pos -> " + HellGame.hellGameInstance.spaceShip);
             posFirstTouch.set(x, y);
         }
         else
